@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marklet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f0f13;
+            --surface: #18181f;
+            --surface-2: #1f1f28;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --accent: #7c5cfc;
+            --accent-glow: rgba(124, 92, 252, 0.25);
+            --accent-2: #c084fc;
+            --text-primary: #f0eeff;
+            --text-secondary: #8a8a9e;
+            --text-muted: #4d4d62;
+            --danger: #f87171;
+            --success: #34d399;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        html,
+        body {
+            width: 360px;
+            height: 500px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px 14px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(124, 92, 252, 0.08) 0%, transparent 60%);
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 14px var(--accent-glow);
+        }
+
+        .brand-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+            color: var(--text-secondary);
+        }
+
+        .icon-btn:hover {
+            background: var(--surface);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        .icon-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(124, 92, 252, 0.35);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-2);
+            letter-spacing: 0.3px;
+        }
+
+        .search-wrap {
+            padding: 12px 14px 0;
+            flex-shrink: 0;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(124, 92, 252, 0.5);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-box svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            caret-color: var(--accent);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .bookmarks-scroll {
+            height: 388px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bookmarks-scroll::after {
+            content: '';
+            display: block;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .bookmarks-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .bookmarks-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .bookmarks-scroll::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 4px;
+        }
+
+        .bookmark-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 20px 22px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s, transform 0.12s, box-shadow 0.15s;
+            animation: fadeSlideIn 0.25s ease backwards;
+            position: relative;
+        }
+
+        .bookmark-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            border-radius: var(--radius) 0 0 var(--radius);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .bookmark-card:hover {
+            border-color: var(--border-hover);
+            background: var(--surface-2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .bookmark-card:hover::before {
+            opacity: 1;
+        }
+
+        .bookmark-card:nth-child(1) {
+            animation-delay: 0.03s;
+        }
+
+        .bookmark-card:nth-child(2) {
+            animation-delay: 0.07s;
+        }
+
+        .bookmark-card:nth-child(3) {
+            animation-delay: 0.11s;
+        }
+
+        .bookmark-card:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+
+        .bookmark-card:nth-child(5) {
+            animation-delay: 0.19s;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .site-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .favicon {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+
+        .site-name {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .bookmark-card:hover .card-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 24px;
+            height: 24px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.12s, border-color 0.12s, color 0.12s;
+            color: var(--text-secondary);
+        }
+
+        .action-btn:hover {
+            background: var(--surface-2);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .action-btn.delete:hover {
+            border-color: rgba(248, 113, 113, 0.4);
+            color: var(--danger);
+            background: rgba(248, 113, 113, 0.08);
+        }
+
+        .action-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .snippet {
+            font-size: 13.5px;
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 14px 0 16px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding-bottom: 2px;
+        }
+
+        mark.highlight {
+            background: linear-gradient(90deg, rgba(124, 92, 252, 0.35), rgba(192, 132, 252, 0.25));
+            color: var(--accent-2);
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timestamp {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .timestamp svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .jump-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(124, 92, 252, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-2);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        }
+
+        .jump-btn:hover {
+            background: rgba(124, 92, 252, 0.3);
+            border-color: rgba(124, 92, 252, 0.6);
+            transform: scale(1.03);
+        }
+
+        .jump-btn svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 36px 28px 32px;
+            gap: 14px;
+            animation: fadeSlideIn 0.3s ease;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .empty-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 24px;
+            border: 1px dashed var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .empty-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-muted);
+        }
+
+        .empty-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .empty-desc {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 220px;
+        }
+
+        .empty-hint {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 11.5px;
+            color: var(--text-secondary);
+        }
+
+        .empty-hint kbd {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            background: var(--bg);
+            border: 1px solid var(--border-hover);
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .footer {
+            padding: 10px 14px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .footer-stat {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .footer-stat span {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .clear-all-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .clear-all-btn:hover {
+            color: var(--danger);
+            background: rgba(248, 113, 113, 0.08);
+        }
+
+        .clear-all-btn svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .no-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 28px 16px;
+            animation: fadeSlideIn 0.2s ease;
+        }
+
+        .no-results svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-muted);
+        }
+
+        .no-results p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--surface-2);
+            border: 1px solid var(--border-hover);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-size: 12px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            flex-shrink: 0;
+        }
+
+        .footer.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 3h14a1 1 0 0 1 1 1v16l-3-2-2 2-2-2-2 2-2-2-3 2V4a1 1 0 0 1 1-1zm3 7h8M8 14h5"
+                        stroke="white" stroke-width="2" stroke-linecap="round" fill="none" />
+                </svg>
+            </div>
+            <span class="brand-name">Marklet</span>
+        </div>
+        <div class="header-actions">
+            <div class="badge" id="count-badge">0 saved</div>
+        </div>
+    </header>
+
+    <div class="search-wrap" id="search-wrap">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="search-input" placeholder="Search your bookmarks…" autocomplete="off"
+                spellcheck="false" />
+        </div>
+    </div>
+
+    <div class="bookmarks-scroll" id="bookmarks-list"></div>
+
+    <footer class="footer hidden" id="footer">
+        <div class="footer-stat">
+            <span id="footer-count">0</span> bookmarks saved locally
+        </div>
+        <button class="clear-all-btn" id="clear-all-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 6V4h6v2" />
+            </svg>
+            Clear all
+        </button>
+    </footer>
+
+    <div class="toast" id="toast">
+        <div class="toast-dot"></div>
+        <span id="toast-msg">Jumped to bookmark</span>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

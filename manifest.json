@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Marklet",
+    "version": "1.0",
+    "short_name": "Save and revisit exact text from any webpage. Highlight, bookmark, and instantly jump back to what matters.",
+    "description": "Save and revisit exact text from any webpage. Highlight, bookmark, and instantly jump back to what matters.",
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "permissions": [
+        "contextMenus",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    }
+}
