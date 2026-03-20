@@ -424,9 +424,11 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 36px 28px 32px;
-            gap: 14px;
+            padding: 40px 20px;
+            gap: 16px;
             animation: fadeSlideIn 0.3s ease;
+            margin: auto;
+            width: 100%;
         }
 
         .empty-icon {
@@ -470,26 +472,45 @@
         }
 
         .empty-hint {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
             background: var(--surface-2);
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
+            padding: 16px 20px;
             font-size: 11.5px;
             color: var(--text-secondary);
+            width: 100%;
+            max-width: 260px;
+        }
+
+        .empty-hint ol {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 18px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .empty-hint li {
+            padding-left: 4px;
+        }
+
+        .empty-hint li::marker {
+            color: var(--accent-2);
+            font-weight: 700;
+            font-size: 12px;
         }
 
         .empty-hint kbd {
             font-family: 'Inter', sans-serif;
             font-size: 10px;
             font-weight: 600;
-            padding: 1px 6px;
+            padding: 2px 6px;
             background: var(--bg);
             border: 1px solid var(--border-hover);
             border-radius: 4px;
             color: var(--text-primary);
+            vertical-align: middle;
         }
 
         .footer {

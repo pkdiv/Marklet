@@ -171,9 +171,13 @@ function buildEmptyState() {
       </svg>
     </div>
     <div class="empty-title">No bookmarks yet</div>
-    <div class="empty-desc">Select any text on a webpage and save it as a bookmark to jump back anytime.</div>
+    <div class="empty-desc">Select any text on a webpage and save it to jump back anytime.</div>
     <div class="empty-hint">
-      <kbd>Select text</kbd> → right-click → <strong>Save with Marklet</strong>
+      <ol>
+        <li><kbd>Select text</kbd></li>
+        <li>Right-click the selected text</li>
+        <li>Click on <strong>Save with Marklet</strong></li>
+      </ol>  
     </div>
   `;
   return el;
@@ -196,15 +200,22 @@ function jumpTo(bm) {
   if (typeof chrome !== "undefined" && chrome.tabs) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
-      if (tab && tab.url === bm.url) {
+      if (tab && tab.url.startsWith(bm.url.split("#")[0])) {
         chrome.tabs.sendMessage(tab.id, { action: "jumpToBookmark", text: bm.text });
         showToast("↗ Jumped to bookmark");
+
       } else {
         chrome.tabs.update(tab.id, { url: bm.url }, () => {
           chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
             if (tabId === tab.id && info.status === "complete") {
               chrome.tabs.onUpdated.removeListener(listener);
-              chrome.tabs.sendMessage(tabId, { action: "jumpToBookmark", text: bm.text });
+
+              chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ["content.js"]
+              }, () => {
+                chrome.tabs.sendMessage(tabId, { action: "jumpToBookmark", text: bm.text });
+              });
             }
           });
         });
