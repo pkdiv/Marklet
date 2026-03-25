@@ -19,12 +19,12 @@ jobs:
       - name: Prepare Chrome build
         run: |
           cp manifest/manifest.chrome.json manifest.json
-          zip -r marklet-chrome.zip . -x "manifest/manifest.*.json"
+          zip -r marklet-chrome.zip . -x "manifest/*" ".git/*" ".github/*" "LICENSE"
 
       - name: Prepare Firefox build
         run: |
           cp manifest/manifest.firefox.json manifest.json
-          zip -r marklet-firefox.zip . -x "manifest/manifest.*.json" "*.zip"
+          zip -r marklet-firefox.zip . -x "manifest/*" "*.zip" ".git/*" ".github/*" "LICENSE"
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2

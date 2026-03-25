@@ -201,8 +201,13 @@ function jumpTo(bm) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
       if (tab && tab.url.startsWith(bm.url.split("#")[0])) {
-        chrome.tabs.sendMessage(tab.id, { action: "jumpToBookmark", text: bm.text });
-        showToast("↗ Jumped to bookmark");
+        chrome.tabs.sendMessage(tab.id, { action: "jumpToBookmark", text: bm.text }, (response) => {
+          if (chrome.runtime.lastError || !response?.found) {
+            showToast("Could not find that text on this page");
+            return;
+          }
+          showToast("↗ Jumped to bookmark");
+        });
 
       } else {
         chrome.tabs.update(tab.id, { url: bm.url }, () => {
@@ -212,9 +217,15 @@ function jumpTo(bm) {
 
               chrome.scripting.executeScript({
                 target: { tabId: tab.id },
-                files: ["content.js"]
+                files: ["scripts/context.js"]
               }, () => {
-                chrome.tabs.sendMessage(tabId, { action: "jumpToBookmark", text: bm.text });
+                chrome.tabs.sendMessage(tabId, { action: "jumpToBookmark", text: bm.text }, (response) => {
+                  if (chrome.runtime.lastError || !response?.found) {
+                    showToast("Opened page, but text was not found");
+                    return;
+                  }
+                  showToast("↗ Jumped to bookmark");
+                });
               });
             }
           });
