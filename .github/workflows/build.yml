@@ -24,7 +24,7 @@ jobs:
           zip -r marklet-firefox.zip . -x "manifest/manifest.*.json"
 
       - name: Create Github Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/marklet-chrome.zip
