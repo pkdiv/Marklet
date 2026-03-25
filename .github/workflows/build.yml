@@ -27,6 +27,10 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: "latest-build"
+          name: Latest Build
+          overwrite_files: true
+          make_latest: true
           files: |
-            dist/marklet-chrome.zip
-            dist/marklet-firefox.zip
+            marklet-chrome.zip
+            marklet-firefox.zip
