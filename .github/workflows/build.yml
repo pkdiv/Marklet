@@ -1,0 +1,32 @@
+name: Build Extensions
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Chrome build
+        run: |
+          cp manifest/manifest.chrome.json manifest.json
+          zip -r marklet-chrome.zip . -x "manifest/manifest.*.json"
+
+      - name: Prepare Firefox build
+        run: |
+          cp manifest/manifest.firefox.json manifest.json
+          zip -r marklet-firefox.zip . -x "manifest/manifest.*.json"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extensions
+          path: |
+            marklet-chrome.zip
+            marklet-firefox.zip
