@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Marklet",
+    "version": "1.0",
+    "description": "Run bookmarklets easily",
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "browser_action": {
+        "default_title": "Run Marklet"
+    },
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "applications": {
+        "gecko": {
+            "id": "marklet@example.com",
+            "strict_min_version": "109.0"
+        }
+    }
+}
