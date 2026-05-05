@@ -16,6 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get Marklet version
+        run: |
+          VERSION=$(python -c "import json; print(json.load(open('manifest/manifest.chrome.json'))['version'])")
+          echo "MARKLET_VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Prepare Chrome build
         run: |
           cp manifest/manifest.chrome.json manifest.json
@@ -29,8 +34,8 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "latest-build"
-          name: Latest Build
+          tag_name: "${{ env.MARKLET_VERSION }}"
+          name: "Marklet v${{ env.MARKLET_VERSION }}"
           overwrite_files: true
           make_latest: true
           files: |
